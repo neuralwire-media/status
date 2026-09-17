@@ -1,6 +1,6 @@
 # Neuralwire Status — Agentic Development Guidelines & Invariants
 
-This file defines the persistent rules, verification protocols, and coding standards for all AI coding agents working on the `neuralwire-status` codebase.
+This file defines the persistent rules, verification protocols, and coding standards for all AI coding agents working on the `status` codebase.
 
 ---
 
@@ -9,7 +9,7 @@ This file defines the persistent rules, verification protocols, and coding stand
 ### 1.1 Canonical Identity & Production Domain
 - **Official Production Domain**: `neuralwire.info` (Canonical base URL: `https://neuralwire.info`).
 - **Official Status Subdomain**: `status.neuralwire.info` (Canonical status URL: `https://status.neuralwire.info`).
-- **Official Organization**: `neuralwire-media` (`https://github.com/neuralwire-media/neuralwire-status`).
+- **Official Organization**: `neuralwire-media` (`https://github.com/neuralwire-media/status`).
 - **Strict Domain Invariant**:
   - NEVER hallucinate, guess, or substitute alternative domains (e.g. `.org`, `.com`, `.net`, `.io`, `.dev`).
   - ALL monitor targets, canonical links, SEO meta tags, and alert references MUST strictly use `neuralwire.info` or `status.neuralwire.info`.

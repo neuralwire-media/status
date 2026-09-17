@@ -1,4 +1,4 @@
-# Neuralwire Status Page (`neuralwire-status`)
+# Neuralwire Status Page (`status`)
 
 [![Live Status](https://img.shields.io/badge/Status-Operational-00e599?style=flat-square)](https://status.neuralwire.info)
 [![Canonical Site](https://img.shields.io/badge/Site-neuralwire.info-00e599?style=flat-square)](https://neuralwire.info)
@@ -28,8 +28,8 @@ Official uptime monitoring, latency tracking, and incident response infrastructu
 ### 2. Setup & Boot
 ```bash
 # Clone the repository
-git clone git@github.com:neuralwire-media/neuralwire-status.git
-cd neuralwire-status
+git clone git@github.com:neuralwire-media/status.git
+cd status
 
 # Copy environment template
 cp .env.example .env
@@ -78,7 +78,7 @@ Uptime Kuma supports direct webhook integrations:
 ./scripts/backup.sh
 
 # Automatic cron (e.g. daily at 02:00 AM)
-0 2 * * * cd /path/to/neuralwire-status && ./scripts/backup.sh >> /var/log/status-backup.log 2>&1
+0 2 * * * cd /path/to/status && ./scripts/backup.sh >> /var/log/status-backup.log 2>&1
 ```
 
 ---
