@@ -1,0 +1,65 @@
+name: CD - Auto Deploy to VPS
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - '**.md'
+      - 'LICENSE'
+  workflow_dispatch:
+
+concurrency:
+  group: production-deployment
+  cancel-in-progress: false
+
+jobs:
+  validate:
+    name: Pre-deployment Validation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup environment file
+        run: cp .env.example .env
+
+      - name: Validate Compose configuration
+        run: docker compose config
+
+  deploy:
+    name: Deploy to VPS
+    needs: validate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Execute deployment via SSH
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: 22
+          script: |
+            set -euo pipefail
+            echo "🚀 [CI/CD] Starting Neuralwire Status deployment..."
+
+            DEPLOY_DIR="$HOME/nw/neuralwire-status"
+            if [ ! -d "$DEPLOY_DIR" ]; then
+              echo "❌ Error: Deployment directory '$DEPLOY_DIR' not found."
+              exit 1
+            fi
+
+            cd "$DEPLOY_DIR"
+
+            echo "📥 [CI/CD] Pulling latest changes from main branch..."
+            git fetch origin main
+            git checkout main
+            git pull origin main
+
+            echo "🐳 [CI/CD] Pulling latest Docker images..."
+            docker compose pull
+
+            echo "🔄 [CI/CD] Restarting Uptime Kuma service..."
+            docker compose up -d --remove-orphans
+
+            echo "✅ [CI/CD] Deployment completed successfully!"
