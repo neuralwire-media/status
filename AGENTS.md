@@ -22,7 +22,7 @@ This file defines the persistent rules, verification protocols, and coding stand
 All monitoring configurations, healthcheck scripts, and integration tests MUST target the verified Neuralwire services:
 - **Web Frontend**: `https://neuralwire.info` (Expected: HTTP 200 OK)
 - **Backend API Health**: `https://neuralwire.info/api/health` (Expected: HTTP 200 OK + JSON payload)
-- **RSS Feed**: `https://neuralwire.info/api/feed` (Expected: HTTP 200 OK + XML payload)
+- **RSS Feed**: `https://neuralwire.info/feed.xml` (Expected: HTTP 200 OK + XML payload)
 - **TLS / SSL Certificate**: `neuralwire.info` (Alert threshold: < 14 days before expiry)
 
 ### 2.2 Container & Data Safety

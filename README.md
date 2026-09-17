@@ -14,7 +14,7 @@ Official uptime monitoring, latency tracking, and incident response infrastructu
 |---|---|---|---|
 | **Web Frontend** | `https://neuralwire.info` | HTTPS (200 OK) | 60s |
 | **Backend API Health** | `https://neuralwire.info/api/health` | HTTPS (200 OK + JSON Schema) | 60s |
-| **RSS / Syndicate Feed** | `https://neuralwire.info/api/feed` | HTTPS (200 OK + XML Header) | 120s |
+| **RSS / Syndicate Feed** | `https://neuralwire.info/feed.xml` | HTTPS (200 OK + XML Header) | 120s |
 | **SSL / TLS Certificate** | `neuralwire.info` | TLS Expiry Alert (< 14 Days) | 24h |
 
 ---
