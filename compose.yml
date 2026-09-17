@@ -32,3 +32,4 @@ services:
 volumes:
   uptime-kuma-data:
     name: neuralwire-status-data
+    external: true
