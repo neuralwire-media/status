@@ -4,39 +4,69 @@ on:
   push:
     branches-ignore:
       - main
-    paths-ignore:
-      - '**.md'
-      - 'LICENSE'
   pull_request:
     branches:
       - main
-    paths-ignore:
-      - '**.md'
-      - 'LICENSE'
   workflow_dispatch:
 
 jobs:
+  changes:
+    name: Detect File Changes
+    runs-on: ubuntu-latest
+    outputs:
+      compose: ${{ steps.filter.outputs.compose }}
+      scripts: ${{ steps.filter.outputs.scripts }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Filter modified paths
+        uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            compose:
+              - 'compose.yml'
+              - '.env.example'
+            scripts:
+              - 'scripts/**'
+
   validate-compose:
     name: Validate Docker Compose
+    needs: changes
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
+        if: needs.changes.outputs.compose == 'true'
         uses: actions/checkout@v4
 
       - name: Setup environment file
+        if: needs.changes.outputs.compose == 'true'
         run: cp .env.example .env
 
       - name: Validate Compose configuration
+        if: needs.changes.outputs.compose == 'true'
         run: docker compose config
+
+      - name: Skip Compose Validation
+        if: needs.changes.outputs.compose != 'true'
+        run: echo "No compose files modified. Check passed automatically."
 
   lint-scripts:
     name: Lint Shell Scripts
+    needs: changes
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
+        if: needs.changes.outputs.scripts == 'true'
         uses: actions/checkout@v4
 
       - name: Run ShellCheck
+        if: needs.changes.outputs.scripts == 'true'
         uses: ludeeus/action-shellcheck@master
         with:
           scandir: './scripts'
+
+      - name: Skip Script Linting
+        if: needs.changes.outputs.scripts != 'true'
+        run: echo "No script files modified. Check passed automatically."
