@@ -59,9 +59,7 @@ jobs:
             echo "🐳 [CI/CD] Pulling latest Docker images..."
             docker compose pull
 
-            echo "🔄 [CI/CD] Restarting Uptime Kuma service..."
-            docker stop neuralwire-status 2>/dev/null || true
-            docker rm neuralwire-status 2>/dev/null || true
+            echo "🔄 [CI/CD] Updating Uptime Kuma service..."
             docker compose up -d --remove-orphans
 
             echo "✅ [CI/CD] Deployment completed successfully!"
