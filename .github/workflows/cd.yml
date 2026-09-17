@@ -43,7 +43,7 @@ jobs:
             set -euo pipefail
             echo "🚀 [CI/CD] Starting Neuralwire Status deployment..."
 
-            DEPLOY_DIR="$HOME/nw/neuralwire-status"
+            DEPLOY_DIR="$HOME/nw/status"
             if [ ! -d "$DEPLOY_DIR" ]; then
               echo "❌ Error: Deployment directory '$DEPLOY_DIR' not found."
               exit 1
