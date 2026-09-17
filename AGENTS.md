@@ -34,10 +34,10 @@ All monitoring configurations, healthcheck scripts, and integration tests MUST t
 
 ## 3. Developer & Git Guardrails
 
-### 3.1 Feature Branching Strategy (MANDATORY)
+### 3.1 Feature Branching Strategy & Ruleset (MANDATORY)
 1. **Base & Target Branch**:
-   - `main` is the single source of truth for stable production configurations.
-   - All tasks (features, infrastructure changes, docs, CI) MUST branch off the latest `main`.
+   - `main` is the single source of truth for stable production configurations and is protected by a GitHub Ruleset.
+   - All tasks (features, infrastructure changes, docs, CI) MUST branch off the latest `main`. Direct pushes to `main` are prohibited.
 2. **Branch Naming Standard (Kebab-Case)**:
    - Features: `feat/<feature-name>`
    - Bug fixes: `fix/<bug-name>`
@@ -50,7 +50,7 @@ All monitoring configurations, healthcheck scripts, and integration tests MUST t
    3. Make changes and verify Docker Compose syntax (`docker compose config`).
    4. Obtain explicit user confirmation before committing.
    5. `git push origin <type>/<kebab-case-name>`
-   6. Open Pull Request with target `base: main`.
+   6. Open Pull Request with target `base: main` (utilizing `.github/pull_request_template.md`).
    7. Hand over the PR URL to the user immediately. Do NOT poll or monitor CI.
 
 ### 3.2 Mandatory GPG-Signed Commits Invariant (STRICT)
@@ -58,7 +58,15 @@ All monitoring configurations, healthcheck scripts, and integration tests MUST t
    - ALL commits in this repository MUST be cryptographically signed with GPG (`commit.gpgsign=true`).
    - **STRICT PROHIBITION**: NEVER bypass, suppress, or disable GPG signing using `--no-gpg-sign` under any circumstances.
 
-### 3.3 Permissions & Scope Lock
+### 3.3 CI/CD & Automated Deployment
+1. **Continuous Integration (`.github/workflows/ci.yml`)**:
+   - Every Pull Request and push to feature branches triggers automated validation (`docker compose config`) and script linting (`shellcheck`).
+   - All status checks must pass before merging into `main`.
+2. **Continuous Deployment (`.github/workflows/cd.yml`)**:
+   - Merging into `main` automatically triggers deployment to the VPS via SSH.
+   - Deployments execute `git pull`, `docker compose pull`, and `docker compose up -d --remove-orphans` idempotently.
+
+### 3.4 Permissions & Scope Lock
 1. **Explicit Permission Required**:
    - NEVER execute `git commit`, `git push`, or create a Pull Request without explicit confirmation from the user.
 2. **Scope Lock Invariant**:
