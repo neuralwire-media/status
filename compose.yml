@@ -2,7 +2,7 @@
 # Neuralwire Status — Uptime Kuma Deployment Configuration
 # Official Documentation: https://uptime.kuma.pet/
 # Canonical Domain: https://neuralwire.info
-# ==============================================================================
+name: status
 
 services:
   uptime-kuma:
