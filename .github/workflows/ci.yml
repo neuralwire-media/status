@@ -1,18 +1,9 @@
 name: CI - Validate & Lint
 
 on:
-  push:
-    branches-ignore:
-      - main
-    paths-ignore:
-      - '**.md'
-      - 'LICENSE'
   pull_request:
     branches:
       - main
-    paths-ignore:
-      - '**.md'
-      - 'LICENSE'
   workflow_dispatch:
 
 jobs:
@@ -23,11 +14,26 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Check modified files
+        uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            compose:
+              - 'compose.yml'
+              - '.env.example'
+
       - name: Setup environment file
+        if: steps.filter.outputs.compose == 'true'
         run: cp .env.example .env
 
       - name: Validate Compose configuration
+        if: steps.filter.outputs.compose == 'true'
         run: docker compose config
+
+      - name: Skip Compose Validation
+        if: steps.filter.outputs.compose != 'true'
+        run: echo "No compose files modified. Check passed automatically."
 
   lint-scripts:
     name: Lint Shell Scripts
@@ -36,7 +42,20 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Check modified files
+        uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            scripts:
+              - 'scripts/**'
+
       - name: Run ShellCheck
+        if: steps.filter.outputs.scripts == 'true'
         uses: ludeeus/action-shellcheck@master
         with:
           scandir: './scripts'
+
+      - name: Skip Script Linting
+        if: steps.filter.outputs.scripts != 'true'
+        run: echo "No script files modified. Check passed automatically."
